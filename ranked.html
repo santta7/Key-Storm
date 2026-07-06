@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeyStorm - Ranked Typing</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #03a9f4;
+            --text-color: #333;
+            --error-color: #f44336;
+            --success-color: #4caf50;
+            --bg-color: #a8ded9;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+        }
+
+        .dark-mode {
+            --primary-color: #64b5f6;
+            --secondary-color: #0288d1;
+            --accent-color: #00b0ff;
+            --text-color: #e0e0e0;
+            --error-color: #ff7043;
+            --success-color: #66bb6a;
+            --bg-color: #0f3a42;
+            --card-bg: #1e1e1e;
+            --border-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo svg {
+            height: 100px;
+            width: 100px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            padding: 0.5rem;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        nav a.active {
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .rank-info-banner {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .current-rank {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .rank-label {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .rank-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .beginner {
+            background-color: #a5d6a7;
+            color: #1b5e20;
+        }
+
+        .intermediate {
+            background-color: #90caf9;
+            color: #0d47a1;
+        }
+
+        .advanced {
+            background-color: #ffcc80;
+            color: #e65100;
+        }
+
+        .rank-stats {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .rank-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .rank-progress {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+        }
+
+        .progress-label {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .progress-bar {
+            height: 12px;
+            background-color: var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent-color);
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            text-align: right;
+        }
+
+        .tier-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .tier-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .tier-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .tier-card.active {
+            border: 2px solid var(--accent-color);
+        }
+
+        .tier-header {
+            padding: 1rem;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tier-header h3 {
+            font-size: 1.3rem;
+        }
+
+        .tier-icon {
+            font-size: 1.5rem;
+        }
+
+        .tier-content {
+            padding: 1.5rem;
+        }
+
+        .tier-description {
+            margin-bottom: 1rem;
+        }
+
+        .tier-requirements {
+            list-style-position: inside;
+            margin-bottom: 1.5rem;
+        }
+
+        .tier-requirements li {
+            margin-bottom: 0.5rem;
+        }
+
+        .primary-btn, .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--accent-color);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.2s;
+        }
+
+        .primary-btn:hover, .btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .leaderboard-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .tab-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .leaderboard-card {
+            margin-bottom: 3rem;
+            overflow-x: auto;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .leaderboard-table th, .leaderboard-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .leaderboard-table th {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .leaderboard-row.highlighted {
+            background-color: rgba(3, 169, 244, 0.1);
+        }
+
+        .typing-test-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .close-modal-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .timer-display {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .typing-area {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background-color: var(--bg-color);
+            min-height: 200px;
+        }
+
+        .metrics-display {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .metric {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .metric-label {
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto;
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 30px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        .mode-icon {
+            margin-right: 8px;
+        }
+
+        .nav-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .rank-info-banner {
+                flex-direction: column;
+            }
+            
+            .rank-stats {
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .rank-progress {
+                width: 100%;
+            }
+            
+            .tier-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background-color: var(--primary-color);
+                z-index: 100;
+                transition: 0.5s;
+                padding: 2rem;
+            }
+            
+            nav.active {
+                right: 0;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .nav-toggle {
+                display: block;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .nav-toggle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100" height="100">
+                <!-- Keyboard base -->
+                <rect x="100" y="140" width="200" height="90" rx="10" ry="10" fill="#333333" />
+                <rect x="105" y="145" width="190" height="80" rx="8" ry="8" fill="#222222" />
+                
+                <!-- Keyboard keys -->
+                <!-- Row 1 -->
+                <rect x="115" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="145" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="175" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="205" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="235" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="265" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                
+                <!-- Row 2 (Removing coloring) -->
+                <rect x="125" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- W key -->
+                <rect x="155" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- A key -->
+                <rect x="185" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- S key -->
+                <rect x="215" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- D key -->
+                <rect x="245" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                
+                <!-- Space bar -->
+                <rect x="145" y="215" width="110" height="15" rx="5" ry="5" fill="#444444" stroke="#666666" stroke-width="1" />
+            </svg>
+            <div class="logo-text">KeyStorm</div>
+        </div>
+        
+        <nav id="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="practice.html">Practice</a></li>
+                <li><a href="ranked.html" class="active">Ranked</a></li>
+                <li><a href="stats.html">Stats</a></li>
+                <li><a href="achievements.html">Achievements</a></li>
+                <li><a href="signup.html">Sign Up</a></li>
+                <li><a href="signin.html">Sign In</a></li>
+            </ul>
+        </nav>
+        
+        <div class="controls">
+            <div class="mode-toggle">
+                <span class="mode-icon">☀️</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+                <span class="mode-icon">🌙</span>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">☰</div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1 class="page-title">Ranked Typing</h1>
+            
+            <div class="rank-info-banner">
+                <div class="current-rank">
+                    <span class="rank-label">Your Current Rank</span>
+                    <div class="rank-badge beginner">
+                        <span class="rank-icon">🌱</span>
+                        <span class="rank-name">Beginner</span>
+                    </div>
+                </div>
+                <div class="rank-stats">
+                    <div class="rank-stat">
+                        <span class="stat-label">Average WPM</span>
+                        <span class="stat-value" id="averageWPM">0</span>
+                    </div>
+                    <div class="rank-stat">
+                        <span class="stat-label">Highest WPM</span>
+                        <span class="stat-value" id="highestWPM">0</span>
+                    </div>
+                    <div class="rank-stat">
+                        <span class="stat-label">Average Accuracy</span>
+                        <span class="stat-value" id="averageAccuracy">0%</span>
+                    </div>
+                </div>
+                <div class="rank-progress">
+                    <span class="progress-label">Progress to Intermediate</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                    </div>
+                    <span class="progress-text" id="progressText">0%</span>
+                </div>
+            </div>
+            
+            <div class="rank-tiers">
+                <h2 class="section-title">Rank Tiers</h2>
+                <div class="tier-cards">
+                    <div class="tier-card" id="beginnerTier">
+                        <div class="tier-header beginner">
+                            <h3>Beginner</h3>
+                            <span class="tier-icon">🌱</span>
+                        </div>
+                        <div class="tier-content">
+                            <p class="tier-description">Perfect for those who are just starting their typing journey. Focus on accuracy over speed.</p>
+                            <ul class="tier-requirements">
+                                <li>WPM Range: 0-30 WPM</li>
+                                <li>Recommended Accuracy: 85%+</li>
+                                <li>Simple texts with common words</li>
+                            </ul>
+                            <button class="primary-btn start-tier-btn" data-tier="beginner">Start Beginner Test</button>
+                        </div>
+                    </div>
+                    
+                    <div class="tier-card" id="intermediateTier">
+                        <div class="tier-header intermediate">
+                            <h3>Intermediate</h3>
+                            <span class="tier-icon">🏆</span>
+                        </div>
+                        <div class="tier-content">
+                            <p class="tier-description">For those who have mastered the basics. Work on building speed while maintaining accuracy.</p>
+                            <ul class="tier-requirements">
+                                <li>WPM Range: 31-60 WPM</li>
+                                <li>Recommended Accuracy: 90%+</li>
+                                <li>Moderate texts with varied vocabulary</li>
+                            </ul>
+                            <button class="primary-btn start-tier-btn" data-tier="intermediate">Start Intermediate Test</button>
+                        </div>
+                    </div>
+                    
+                    <div class="tier-card" id="advancedTier">
+                        <div class="tier-header advanced">
+                            <h3>Advanced</h3>
+                            <span class="tier-icon">⭐</span>
+                        </div>
+                        <div class="tier-content">
+                            <p class="tier-description">For experienced typists looking to push their limits and perfect their technique.</p>
+                            <ul class="tier-requirements">
+                                <li>WPM Range: 61+ WPM</li>
+                                <li>Recommended Accuracy: 95%+</li>
+                                <li>Complex texts with challenging words</li>
+                            </ul>
+                            <button class="primary-btn start-tier-btn" data-tier="advanced">Start Advanced Test</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 KeyStorm - Master Your Typing Speed</p>
+        </div>
+    </footer>
+
+    <div class="typing-test-modal" id="typingTestModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Typing Test</h2>
+                <button class="close-modal-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="timer-display" id="timerDisplay">1:00</div>
+                <div class="typing-area" id="typingArea" tabindex="0">
+                    <div class="sample-text" id="testSampleText"></div>
+                </div>
+                <button class="primary-btn" id="startTestButton">Start Test</button>
+                <button class="primary-btn" id="resetTestButton" style="display: none;">Reset Test</button>
+                <div class="metrics-display">
+                    <div class="metric">
+                        <span class="metric-label">WPM</span>
+                        <span class="metric-value" id="currentWPM">0</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Accuracy</span>
+                        <span class="metric-value" id="currentAccuracy">100%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="fire-button" id="fire-button" style="position: fixed; bottom: 20px; right: 20px; font-size: 2rem; background: transparent; border: none; cursor: pointer; transition: transform 0.3s;">🔥</button>
+    <div class="message" id="message-display" style="position: fixed; bottom: 90px; right: 20px; font-size: 1.2rem; color: #ff0000; background-color: rgb(255, 255, 255); border: 1px solid #4a6fa5; border-radius: 5px; padding: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); display: none; z-index: 1000;"></div>
+    <script>
+        // DOM Elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const navToggle = document.getElementById('nav-toggle');
+        const navMenu = document.getElementById('nav-menu');
+        const typingTestModal = document.getElementById('typingTestModal');
+        const typingArea = document.getElementById('typingArea');
+        const testSampleText = document.getElementById('testSampleText');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const startTestButton = document.getElementById('startTestButton');
+        const resetTestButton = document.getElementById('resetTestButton');
+        const currentWPM = document.getElementById('currentWPM');
+        const currentAccuracy = document.getElementById('currentAccuracy');
+        const averageWPM = document.getElementById('averageWPM');
+        const highestWPM = document.getElementById('highestWPM');
+        const averageAccuracy = document.getElementById('averageAccuracy');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        let timer;
+        let timeLeft = 60;
+        let isTesting = false;
+        let correctCount = 0;
+        let totalTyped = 0;
+        let currentTier = 'beginner';
+
+        // Sample texts for typing tests
+        const sampleTexts = {
+            beginner: [
+                "The quick brown fox jumps over the lazy dog.",
+                "A journey of a thousand miles begins with a single step.",
+                "To be or not to be, that is the question."
+            ],
+            intermediate: [
+                "All that glitters is not gold.",
+                "In the middle of difficulty lies opportunity.",
+                "The only thing we have to fear is fear itself."
+            ],
+            advanced: [
+                "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.",
+                "Success is not final, failure is not fatal: It is the courage to continue that counts.",
+                "The future belongs to those who believe in the beauty of their dreams."
+            ]
+        };
+
+        // Functions
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+        
+        function toggleMenu() {
+            navMenu.classList.toggle('active');
+        }
+        
+        function loadThemePreference() {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            if (darkMode) {
+                document.body.classList.add('dark-mode');
+                themeToggle.checked = true;
+            }
+        }
+
+        function resetTypingTest() {
+            // Reset test variables
+            isTesting = false;
+            correctCount = 0;
+            totalTyped = 0;
+            timeLeft = 60; // Reset timer to 60 seconds
+            timerDisplay.textContent = `1:00`; // Reset timer display
+            typingArea.innerHTML = ''; // Clear the typing area
+            testSampleText.textContent = ''; // Clear the displayed paragraph
+            currentWPM.textContent = '0'; // Reset WPM display
+            currentAccuracy.textContent = '100%'; // Reset accuracy display
+
+            // Hide the reset button and show the start button
+            resetTestButton.style.display = 'none';
+            startTestButton.style.display = 'inline-block';
+        }
+
+        // Event listener for the reset button
+        resetTestButton.addEventListener('click', resetTypingTest);
+
+        function startTypingTest() {
+            isTesting = true;
+            navMenu.querySelector('.active').classList.remove('active'); // Remove active class from nav
+            correctCount = 0;
+            totalTyped = 0;
+            timeLeft = 60;
+            timerDisplay.textContent = `1:00`;
+
+            // Select the appropriate sample text based on the current tier
+            let currentTierTexts;
+            if (currentTier === 'beginner') {
+                currentTierTexts = sampleTexts.beginner;
+            } else if (currentTier === 'intermediate') {
+                currentTierTexts = sampleTexts.intermediate;
+            } else if (currentTier === 'advanced') {
+                currentTierTexts = sampleTexts.advanced;
+            }
+
+            // Select a new paragraph randomly from the current tier
+            const randomIndex = Math.floor(Math.random() * currentTierTexts.length);
+            const text = currentTierTexts[randomIndex];
+            testSampleText.textContent = text; // Display the new paragraph
+
+            typingArea.innerHTML = '';
+            for (let char of text) {
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.classList.add('char');
+                typingArea.appendChild(span);
+            }
+            typingArea.firstChild.classList.add('active');
+            typingArea.focus(); // Focus on the typing area
+            startTimer();
+            startTestButton.style.display = 'none';
+            resetTestButton.style.display = 'inline-block';
+        }
+
+        // Event listener for the start test button
+        startTestButton.addEventListener('click', startTypingTest);
+
+        // Function to start the timer
+        function startTimer() {
+            clearInterval(timer); // Clear any existing timer
+            timer = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+                    timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                } else {
+                    clearInterval(timer);
+                    endTypingTest(); // Call end function when time is up
+                }
+            }, 1000);
+        }
+
+        function endTypingTest() {
+            isTesting = false;
+            clearInterval(timer);
+            const wpm = (correctCount / 5) / (60 / 60); // Calculate WPM
+            const accuracy = (correctCount / totalTyped) * 100 || 0; // Calculate accuracy
+            currentWPM.textContent = Math.round(wpm);
+            currentAccuracy.textContent = Math.round(accuracy) + '%';
+            updateStats(wpm, accuracy);
+            alert("Test completed! Your WPM: " + Math.round(wpm) + ", Accuracy: " + Math.round(accuracy) + "%");
+            resetTestButton.style.display = 'none';
+            startTestButton.style.display = 'inline-block';
+        }
+
+        function updateStats(wpm, accuracy) {
+            // Update average and highest WPM
+            const currentAverageWPM = parseInt(averageWPM.textContent);
+            const currentHighestWPM = parseInt(highestWPM.textContent);
+            const newAverageWPM = (currentAverageWPM + wpm) / 2;
+            averageWPM.textContent = Math.round((currentAverageWPM + wpm) / 2);
+            highestWPM.textContent = Math.max(currentHighestWPM, wpm);
+            // Update average accuracy
+            const currentAverageAccuracy = parseInt(averageAccuracy.textContent);
+            const newAverageAccuracy = (currentAverageAccuracy + accuracy) / 2;
+            averageAccuracy.textContent = Math.round(newAverageAccuracy) + '%';
+
+            // Update progress
+            const progress = Math.min(100, (currentAverageWPM + wpm) / 2);
+            progressFill.style.width = progress + '%';
+            progressText.textContent = progress + '%';
+
+            // Check for tier upgrade
+            if (progress >= 100 && currentTier === 'beginner') {
+                currentTier = 'intermediate';
+                alert("Congratulations! You've advanced to Intermediate level!");
+                document.querySelector('.rank-badge').classList.remove('beginner');
+                document.querySelector('.rank-badge').classList.add('intermediate');
+                document.querySelector('.rank-name').textContent = 'Intermediate';
+            } else if (progress >= 100 && currentTier === 'intermediate') {
+                currentTier = 'advanced';
+                alert("Congratulations! You've advanced to Advanced level!");
+                document.querySelector('.rank-badge').classList.remove('intermediate');
+                document.querySelector('.rank-badge').classList.add('advanced');
+                document.querySelector('.rank-name').textContent = 'Advanced';
+            }
+            }
+
+            function handleTyping(event) {
+            if (!isTesting) return;
+
+            // Ignore Shift key and other non-character keys
+            if (event.key.length > 1) {
+                return;
+            }
+
+            const typedChar = event.key;
+            const activeChar = document.querySelector('.active');
+            if (typedChar === activeChar.textContent) {
+                activeChar.style.color = 'green'; // Correctly typed
+                correctCount++;
+            } else {
+                activeChar.style.color = 'red'; // Incorrectly typed
+            }
+            totalTyped++;
+            activeChar.classList.remove('active');
+            if (activeChar.nextElementSibling) {
+                activeChar.nextElementSibling.classList.add('active');
+            } else {
+                endTypingTest(); // End test if all characters are typed
+            }
+            }
+
+            // Event Listeners
+            themeToggle.addEventListener('change', toggleTheme);
+            navToggle.addEventListener('click', toggleMenu);
+            startTestButton.addEventListener('click', startTypingTest);
+            resetTestButton.addEventListener('click', () => {
+            if (isTesting) {
+                endTypingTest();
+            }
+            startTypingTest();
+            });
+            typingArea.addEventListener('keydown', (event) => {
+                if (!isTesting) {
+                    event.preventDefault(); // Prevent any key press if the test hasn't started
+                    return;
+                }
+            handleTyping(event);
+            });
+
+            // Initialize
+            loadThemePreference();
+
+            // Tab switching
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab-btn').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Here you would fetch and display the appropriate leaderboard data
+                const tabType = this.getAttribute('data-tab');
+                console.log(`Switching to ${tabType} leaderboard`);
+                // Update leaderboard data based on the selected tab
+                updateLeaderboard(tabType);
+            });
+        });
+
+            // Tier selection
+            document.querySelectorAll('.start-tier-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const currentTier = this.getAttribute('data-tier');
+                const progress = parseInt(progressText.textContent);
+                if (currentTier === 'intermediate' && progress < 100) {
+                    alert("You need to reach 100% progress in the Beginner tier to unlock the Intermediate tier.");
+                    return;
+                } else if (currentTier === 'advanced' && progress < 200) {
+                    alert("You need to reach 200% progress in the Intermediate tier to unlock the Advanced tier.");
+                    return;
+                }
+                console.log(`Starting ${currentTier} tier test`);
+                typingTestModal.style.display = 'flex';
+                testSampleText.textContent = sampleTexts[currentTier];
+            });
+         });
+
+            // Close modal
+            document.querySelector('.close-modal-btn').addEventListener('click', function() {
+            typingTestModal.style.display = 'none';
+            // Optionally reapply the active class to the "Ranked" link
+            document.querySelector('nav a.active').classList.remove('active');
+            document.querySelector('nav a[href="ranked.html"]').classList.add('active');
+            });
+
+            // Array of motivational messages
+            const messages = [
+            "Keep typing! Every keystroke brings you closer to mastery.",
+            "Practice makes perfect! You're doing great!",
+            "Believe in yourself! Every word typed is a step forward.",
+            "Stay focused! Your typing skills are improving every day.",
+            "Consistency is key! Keep up the great work!",
+            "You're on a roll! Every day is a new opportunity to improve.",
+            "Typing is a skill that opens doors. Keep practicing!",
+            "Great job! Your fingers are becoming faster and more accurate.",
+            "Every keystroke counts! You're building a valuable skill.",
+            "Keep pushing! You're capable of amazing things!"
+            ];
+
+            // Function to show motivation message
+            document.getElementById('fire-button').addEventListener('click', function() {
+            const message = messages[Math.floor(Math.random() * messages.length)];
+            const messageDisplay = document.getElementById('message-display');
+            messageDisplay.textContent = message;
+            messageDisplay.style.display = 'block';
+
+            // Hide the message after 3 seconds
+            setTimeout(() => {
+                messageDisplay.style.display = 'none';
+            }, 3000);
+            });
+        </script>
+    </body>
+</html>

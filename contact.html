@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <style>
+        body {
+            background-color: #e0f7fa; /* Light greenish-blue background */
+            color: #004d40; /* Darker greenish-blue text color */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #00796b; /* Medium greenish-blue for the header */
+        }
+        p {
+            margin-bottom: 15px;
+            line-height: 1.6; /* Improved readability */
+        }
+        .contact-info {
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #00796b; /* Button color */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #004d40; /* Darker shade on hover */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Contact KeyStorm</h1>
+    </header>
+    <main>
+        <div class="contact-info">
+            <p>Email: <a href="mailto:support@keystorm.com" style="color: #00796b;">support@keystorm.com</a></p>
+            <p>Address: 123 Typing Lane, Keyboard City, TX 12345</p>
+            <p>Phone: (123) 456-7890</p>
+            <p>For any inquiries, please reach out to us through the above contact details.</p>
+        </div>
+        
+        <button id="back-button">Back to Home</button>
+    </main>
+    <script>
+        document.getElementById('back-button').addEventListener('click', function() {
+            window.location.href = 'index.html'; // Redirect to home page
+        });
+    </script>
+</body>
+</html>

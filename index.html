@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeyStorm - Master Your Typing</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #03a9f4;
+            --text-color: #333;
+            --error-color: #f44336;
+            --success-color: #4caf50;
+            --bg-color: #a8ded9;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+        }
+
+        .dark-mode {
+            --primary-color: #64b5f6;
+            --secondary-color: #0288d1;
+            --accent-color: #00b0ff;
+            --text-color: #e0e0e0;
+            --error-color: #ff7043;
+            --success-color: #66bb6a;
+            --bg-color: #0f3a42;
+            --card-bg: #1e1e1e;
+            --border-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo svg {
+            height: 100px; /* Increased size */
+            width: 100px; /* Increased size */
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            padding: 0.5rem;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        nav a.active {
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem 1rem;
+        }
+
+        .hero {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/api/placeholder/1200/500');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 5rem 1rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--accent-color);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .card-content {
+            margin-bottom: 1rem;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--primary-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background-color: var(--accent-color);
+            border: 4px solid var(--primary-color);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .timeline-item:nth-child(even)::after {
+            left: -10px;
+        }
+
+        .timeline-content {
+            padding: 20px;
+            background-color: var(--card-bg);
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-date {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .facts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .fact {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .fact-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 30px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        .mode-icon {
+            margin-right: 8px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto;
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        footer nav {
+            margin-top: 1rem; /* Adds some space between the copyright text and the nav */
+        }
+
+        footer nav ul {
+            display: inline-flex; /* Use inline-flex to keep the list items in a row */
+            list-style: none;
+            gap: 1.5rem; /* Space between the links */
+        }   
+
+        footer nav a {
+            color: white; /* Ensures the links are white */
+            text-decoration: none; /* Removes underline from links */
+            font-weight: 500; /* Makes the links slightly bolder */
+            transition: color 0.2s; /* Smooth transition for hover effect */
+        }
+
+        footer nav a:hover {
+            color: var(--accent-color); /* Changes color on hover */
+        }
+
+        @media (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item:nth-child(odd)::after, 
+            .timeline-item:nth-child(even)::after {
+                left: 21px;
+            }
+            
+            nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background-color: var(--primary-color);
+                z-index: 100;
+                transition: 0.5s;
+                padding: 2rem;
+            }
+            
+            nav.active {
+                right: 0;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .nav-toggle {
+                display: block;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .nav-toggle {
+                display: none;
+            }
+        }
+
+        .fire-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 2rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .fire-button:hover {
+            background-color: #e64a19; /* Darker fire color on hover */
+            transform: scale(1.1);
+        }
+        .message {
+            position: fixed;
+            bottom: 90px; /* Adjust to position above the button */
+            right: 20px;
+            font-size: 1.2rem;
+            color: #ff0000;
+            background-color: rgb(255, 255, 255);
+            border: 1px solid #4a6fa5;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none; /* Initially hidden */
+            z-index: 1000; /* Ensure it appears above other elements */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100" height="100">
+                
+                <rect x="100" y="140" width="200" height="90" rx="10" ry="10" fill="#333333" />
+                <rect x="105" y="145" width="190" height="80" rx="8" ry="8" fill="#222222" />
+                
+              
+                <rect x="115" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="145" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="175" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="205" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="235" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="265" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                
+                
+                <rect x="125" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- W key -->
+                <rect x="155" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- A key -->
+                <rect x="185" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- S key -->
+                <rect x="215" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- D key -->
+                <rect x="245" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                
+              
+                <rect x="145" y="215" width="110" height="15" rx="5" ry="5" fill="#444444" stroke="#666666" stroke-width="1" />
+            </svg>
+            <div class="logo-text">KeyStorm</div>
+        </div>
+        
+        <nav id="nav-menu">
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="practice.html">Practice</a></li>
+                <li><a href="ranked.html">Ranked</a></li>
+                <li><a href="stats.html">Stats</a></li>
+                <li><a href="achievements.html">Achievements</a></li>
+                <li><a href="signup.html">Sign Up</a></li>
+                <li><a href="signin.html">Sign In</a></li>
+            </ul>
+        </nav>
+        
+        <div class="controls">
+            <div class="mode-toggle">
+                <span class="mode-icon">☀️</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+                <span class="mode-icon">🌙</span>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">☰</div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Master the Art of Typing</h1>
+                <p>Improve your typing speed and accuracy with KeyStorm - the ultimate typing practice platform. Challenge yourself, track progress, and become a keyboard master.</p>
+                <a href="practice.html" class="btn">Start Typing Now</a>
+            </div>
+        </section>
+
+        <div class="container">
+            <section class="section">
+                <h2 class="section-title">Why Improve Your Typing?</h2>
+                <div class="cards">
+                    <div class="card">
+                        <div class="card-icon">⚡</div>
+                        <h3 class="card-title">Boost Productivity</h3>
+                        <p class="card-content">Typing faster means getting more done in less time. Professional typists can type over 75 WPM, drastically improving workflow efficiency.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">💼</div>
+                        <h3 class="card-title">Career Advantage</h3>
+                        <p class="card-content">Many careers require efficient typing skills. Stand out from the competition with impressive typing speeds and accuracy.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🧠</div>
+                        <h3 class="card-title">Cognitive Benefits</h3>
+                        <p class="card-content">Touch typing improves muscle memory, hand-eye coordination, and allows you to focus on content rather than finding keys.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Typing Through History</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">1868</div>
+                            <h3>First Typewriter Patent</h3>
+                            <p>Christopher Latham Sholes, Carlos Glidden, and Samuel W. Soule were granted a patent for the first practical typewriter.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">1873</div>
+                            <h3>QWERTY Layout Introduced</h3>
+                            <p>The QWERTY keyboard layout was designed to prevent mechanical jams by separating commonly used letter pairs.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">1936</div>
+                            <h3>IBM Electric Typewriter</h3>
+                            <p>IBM released its first electric typewriter, making typing easier and less physically demanding.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">1946</div>
+                            <h3>First Computer Keyboard</h3>
+                            <p>The ENIAC computer introduced keyboard input, beginning the transition from typewriters to computer keyboards.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">1981</div>
+                            <h3>IBM PC Keyboard</h3>
+                            <p>The IBM Model F keyboard standardized the layout still used in modern keyboards.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2010s</div>
+                            <h3>Mechanical Keyboard Revival</h3>
+                            <p>Enthusiasts rediscovered the benefits of mechanical keyboards, leading to a renaissance in keyboard technology and customization.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Keyboard Gallery</h2>
+                <div>
+                    <span style="color: white;font-size: medium; "><b>
+                        &nbsp;&nbsp;&nbsp;Vintage typewriter &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IBM Model M keyboard&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Modern mechanical keyboard&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ergonomic keyboard
+                    </b>
+                    </span>
+                </div>
+                <div class="image-gallery">
+                    <div class="gallery-item">
+                        <img src="vintage_typewriter.jpeg " alt="Vintage typewriter">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="ibm-model-m-keyboard.jpeg" alt="IBM Model M keyboard">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="modern_mech_keyboard.jpeg" alt="Modern mechanical keyboard">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="ergonomic_keyboard.jpeg" alt="Ergonomic keyboard">
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Typing Facts</h2>
+                <div class="facts">
+                    <div class="fact">
+                        <div class="fact-number">200+</div>
+                        <p>World record for words per minute (WPM)</p>
+                    </div>
+                    <div class="fact">
+                        <div class="fact-number">40</div>
+                        <p>Average typing speed in WPM</p>
+                    </div>
+                    <div class="fact">
+                        <div class="fact-number">50%</div>
+                        <p>Productivity boost from touch typing</p>
+                    </div>
+                    <div class="fact">
+                        <div class="fact-number">32M</div>
+                        <p>Average keystrokes per year for a typist</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Features of KeyStorm</h2>
+                <div class="cards">
+                    <div class="card">
+                        <h3 class="card-title">Practice Mode</h3>
+                        <p class="card-content">Improve your typing skills with randomly generated paragraphs across various topics and difficulty levels.</p>
+                        <a href="practice.html" class="btn">Try Practice Mode</a>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Ranked Typing</h3>
+                        <p class="card-content">Challenge yourself with beginner, intermediate, and advanced tests. Compete on leaderboards and track your progress.</p>
+                        <a href="ranked.html" class="btn">Start Ranked Mode</a>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Achievements</h3>
+                        <p class="card-content">Earn badges and unlock achievements as you improve your typing skills and complete challenges.</p>
+                        <a href="achievements.html" class="btn">View Achievements</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 KeyStorm - Master Your Typing Speed</p>
+            <nav>
+                <ul>
+                    <li><a href="#top">About</a></li>
+                    <li><a href="privacy.html">Privacy & Policy</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="feedback.html">Feedback</a></li>
+                    <li><a href="faqs.html">FAQs</a></li>
+                    <li><a href="credits.html">Credits</a></li>
+                </ul>
+            </nav>
+        </div>
+    </footer>
+
+    <button class="fire-button" id="fire-button">🔥</button>
+    <div class="message" id="message-display"></div>
+
+    <script>
+       
+        const themeToggle = document.getElementById('theme-toggle');
+        const navToggle = document.getElementById('nav-toggle');
+        const navMenu = document.getElementById('nav-menu');
+        
+       
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+        
+        function toggleMenu() {
+            navMenu.classList.toggle('active');
+        }
+        
+        function loadThemePreference() {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            if (darkMode) {
+                document.body.classList.add('dark-mode');
+                themeToggle.checked = true;
+            }
+        }
+        
+       
+        themeToggle.addEventListener('change', toggleTheme);
+        navToggle.addEventListener('click', toggleMenu);
+        
+      
+        loadThemePreference();
+
+        
+        const messages = [
+            "Keep typing! Every keystroke brings you closer to mastery.",
+            "Practice makes perfect! You're doing great!",
+            "Believe in yourself! Every word typed is a step forward.",
+            "Stay focused! Your typing skills are improving every day.",
+            "Consistency is key! Keep up the great work!",
+            "You're on a roll! Every day is a new opportunity to improve.",
+            "Typing is a skill that opens doors. Keep practicing!",
+            "Great job! Your fingers are becoming faster and more accurate.",
+            "Every keystroke counts! You're building a valuable skill.",
+            "Keep pushing! You're capable of amazing things!"
+        ];
+
+       
+        function getRandomMessage() {
+            const randomIndex = Math.floor(Math.random() * messages.length);
+            return messages[randomIndex];
+        }
+
+        document.getElementById('fire-button').addEventListener('click', function() {
+            const message = getRandomMessage();
+            const messageDisplay = document.getElementById('message-display');
+            messageDisplay.textContent = message;
+            messageDisplay.style.display = 'block'; // Show the message
+
+          
+            setTimeout(() => {
+                messageDisplay.style.display = 'none';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

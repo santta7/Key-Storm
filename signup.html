@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - KeyStorm</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #a8ded9;
+            color: #333;
+            padding: 2rem;
+            background-image: url('bg2.jpeg'); /* Path to your image */
+            background-size: cover; /* Cover the entire page */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Prevent the image from repeating */
+        }
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"],
+        input[type="tel"],
+        input[type="range"],
+        textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+        }
+        .checkbox-group input {
+            margin-right: 0.5rem;
+        }
+        button {
+            padding: 0.75rem 1.5rem;
+            background-color: #4a6fa5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #166088;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Sign Up</h2>
+        <form id="signup-form">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="verify-password">Verify Password:</label>
+                <input type="password" id="verify-password" name="verify-password" required>
+            </div>
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="range" id="age" name="age" min="10" max="100" value="25">
+                <span id="age-value">25</span>
+            </div>
+            <div class="form-group">
+                <label>Gender:</label>
+                <label><input type="radio" name="gender" value="male" required> Male</label>
+                <label><input type="radio" name="gender" value="female" required> Female</label>
+                <label><input type="radio" name="gender" value="other" required> Other</label>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone No:</label>
+                <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" required>
+                <small>Format: 1234567890</small>
+            </div>
+            <div class="form-group">
+                <label for="address">Address (optional):</label>
+                <textarea id="address" name="address" rows="3"></textarea>
+            </div>
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">I agree to the terms and conditions</label>
+            </div>
+            <button type="submit">Sign Up</button>
+        </form>
+    </div>
+
+    <script>
+            document.getElementById('age').addEventListener('input', function() {
+                document.getElementById('age-value').textContent = this.value;
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const verifyPassword = document.getElementById('verify-password').value;
+            const age = document.getElementById('age').value;
+            const gender = document.querySelector('input[name="gender"]:checked');
+            const phone = document.getElementById('phone').value;
+            const terms = document.getElementById('terms').checked;
+
+            // Validate required fields
+            if (!username || !email || !password || !verifyPassword || !age || !gender || !phone || !terms) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            // Check if passwords match
+            if (password !== verifyPassword) {
+                alert('Passwords do not match. Please try again.');
+                return;
+            }
+
+            // Save user data to local storage
+            const userData = {
+                username: username,
+                email: email,
+                password: password,
+                age: age,
+                gender: gender.value,
+                phone: phone,
+                address: document.getElementById('address').value
+            };
+
+            localStorage.setItem('userData', JSON.stringify(userData));
+
+            alert('Sign Up Successful! Redirecting to home page...');
+            window.location.href = 'index.html'; // Redirect to home page
+        });
+    </script>
+</body>
+</html>

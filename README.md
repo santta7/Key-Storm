@@ -1,3 +1,57 @@
+<<<<<<< HEAD
+# KeyStorm
+
+KeyStorm is a desktop typing practice application built with Electron, HTML, CSS, and JavaScript. It is designed to help users improve their typing speed, accuracy, and consistency through a clean and interactive experience.
+
+## Project Description
+
+KeyStorm offers a modern typing-learning experience with features such as:
+- Practice sessions for improving typing skill
+- Ranked mode and performance tracking
+- Achievements and progress statistics
+- User sign-in and sign-up pages
+- FAQ, feedback, privacy, and contact sections
+
+The project combines education and gamification to make typing practice engaging and motivating.
+
+## Features
+
+- Typing practice interface
+- Dark/light theme support
+- Leaderboard-style ranked mode
+- Achievement and stat tracking
+- Multiple informational pages for users
+- Desktop app experience using Electron
+
+## Tech Stack
+
+- HTML5
+- CSS3
+- JavaScript
+- Electron
+
+## Project Structure
+
+- index.html - Main landing page
+- practice.html - Practice mode page
+- ranked.html - Ranked challenge page
+- stats.html - Statistics page
+- achievements.html - Achievements page
+- signin.html / signup.html - Authentication pages
+- main.js - Electron application entry point
+
+## Installation
+
+1. Open the project folder
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+## Run the App
+
+Start the Electron application with:
+=======
 # ⌨️ KeyStorm
 
 > **Master your typing. Track your progress. Rise through the ranks. 🚀**
@@ -82,11 +136,21 @@ npm install
 ## ▶️ Run the Application
 
 Start the Electron desktop application:
+>>>>>>> 2bc62512e3bdb3a93db0d42520a951ce1bac4bca
 
 ```bash
 npm start
 ```
 
+<<<<<<< HEAD
+## Notes
+
+This project is a UI-based typing application and can be expanded with real-time typing tests, user authentication, and saved progress in the future.
+
+## Author
+
+Created as a UI/UX and desktop app project for academic purposes.
+=======
 ---
 
 ## 🎯 Future Enhancements
@@ -147,3 +211,4 @@ Built with ❤️ using **Electron, HTML, CSS, and JavaScript**.
 **Happy Typing! ⌨️🚀**
 
 </div>
+>>>>>>> 2bc62512e3bdb3a93db0d42520a951ce1bac4bca

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - KeyStorm</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #a8ded9;
+            color: #333;
+            padding: 2rem;
+            background-image: url('bg1.jpeg'); /* Path to your image */
+            background-size: cover; /* Cover the entire page */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Prevent the image from repeating */            
+        }
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: rgb(255, 255, 255);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 0.75rem 1.5rem;
+            background-color: #4a6fa5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #166088;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Sign In</h2>
+        <form id="signin-form">
+            <div class="form-group">
+                <label for="signin-username-email">Username or Email:</label>
+                <input type="text" id="signin-username-email" name="signin-username-email" required>
+            </div>
+            <div class="form-group">
+                <label for="signin-password">Password:</label>
+                <input type="password" id="signin-password" name="signin-password" required>
+            </div>
+            <button type="submit">Sign In</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('signin-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const usernameEmail = document.getElementById('signin-username-email').value;
+            const password = document.getElementById('signin-password').value;
+
+            if (!usernameEmail || !password) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            // Retrieve user data from local storage
+            const userData = JSON.parse(localStorage.getItem('userData'));
+
+            // Check if user data exists and credentials match
+            if (userData) {
+                if ((userData.username === usernameEmail || userData.email === usernameEmail) && userData.password === password) {
+                    alert('Sign In Successful! Redirecting to home page...');
+                    window.location.href = 'index.html'; // Redirect to home page
+                } else {
+                    alert('Invalid username/email or password. Please try again.');
+                }
+            } else {
+                alert('No user found. Please sign up first.');
+            }
+        });
+    </script>
+</body>
+</html>            

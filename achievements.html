@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeyStorm - Achievements</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #03a9f4;
+            --text-color: #333;
+            --error-color: #f44336;
+            --success-color: #4caf50;
+            --bg-color: #a8ded9;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+        }
+
+        .dark-mode {
+            --primary-color: #64b5f6;
+            --secondary-color: #0288d1;
+            --accent-color: #00b0ff;
+            --text-color: #e0e0e0;
+            --error-color: #ff7043;
+            --success-color: #66bb6a;
+            --bg-color: #0f3a42;
+            --card-bg: #1e1e1e;
+            --border-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo svg {
+            height: 100px;
+            width: 100px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            padding: 0.5rem;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        nav a.active {
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .achievement-header {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/api/placeholder/1200/300');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+        }
+
+        .achievement-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .achievement-header p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .achievement-stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+
+        .stat-box {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin: 0.5rem;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .achievement-categories {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .category-button {
+            padding: 0.75rem 1.5rem;
+            margin: 0 0.5rem;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .category-button.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .category-button:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .achievement-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .achievement-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            align-self: center;
+        }
+
+        .achievement-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .achievement-description {
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .achievement-progress {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent-color);
+            border-radius: 5px;
+        }
+
+        .achievement-status {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        .achievement-card.completed {
+            border: 2px solid var(--success-color);
+        }
+
+        .achievement-card.completed .achievement-icon {
+            color: var(--success-color);
+        }
+
+        .progress-text {
+            font-weight: bold;
+        }
+
+        .badge-display {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .badge {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--card-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .badge.earned {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .badge.locked {
+            filter: grayscale(100%);
+            opacity: 0.5;
+        }
+
+        .badge-tooltip {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--card-bg);
+            padding: 0.5rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            width: 150px;
+            text-align: center;
+            font-size: 0.8rem;
+            display: none;
+            z-index: 10;
+        }
+
+        .badge:hover .badge-tooltip {
+            display: block;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 30px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        .mode-icon {
+            margin-right: 8px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto;
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .fire-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 2rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .fire-button:hover {
+            background-color: #e64a19;
+            transform: scale(1.1);
+        }
+        .message {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            font-size: 1.2rem;
+            color: #ff0000;
+            background-color: rgb(255, 255, 255);
+            border: 1px solid #4a6fa5;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background-color: var(--primary-color);
+                z-index: 100;
+                transition: 0.5s;
+                padding: 2rem;
+            }
+            
+            nav.active {
+                right: 0;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .nav-toggle {
+                display: block;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+
+            .achievement-categories {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .category-button {
+                margin: 0.5rem;
+                width: 80%;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .nav-toggle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100" height="100">
+                <!-- Keyboard base -->
+                <rect x="100" y="140" width="200" height="90" rx="10" ry="10" fill="#333333" />
+                <rect x="105" y="145" width="190" height="80" rx="8" ry="8" fill="#222222" />
+                
+                <!-- Keyboard keys -->
+                <!-- Row 1 -->
+                <rect x="115" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="145" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="175" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="205" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="235" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="265" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                
+                <!-- Row 2 (Removing coloring) -->
+                <rect x="125" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- W key -->
+                <rect x="155" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- A key -->
+                <rect x="185" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- S key -->
+                <rect x="215" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- D key -->
+                <rect x="245" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                
+                <!-- Space bar -->
+                <rect x="145" y="215" width="110" height="15" rx="5" ry="5" fill="#444444" stroke="#666666" stroke-width="1" />
+            </svg>
+            <div class="logo-text">KeyStorm</div>
+        </div>
+        
+        <nav id="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="practice.html">Practice</a></li>
+                <li><a href="ranked.html">Ranked</a></li>
+                <li><a href="stats.html">Stats</a></li>
+                <li><a href="achievements.html" class="active">Achievements</a></li>
+                <li><a href="signup.html">Sign Up</a></li>
+                <li><a href="signin.html">Sign In</a></li>
+            </ul>
+        </nav>
+        
+        <div class="controls">
+            <div class="mode-toggle">
+                <span class="mode-icon">☀️</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+                <span class="mode-icon">🌙</span>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">☰</div>
+        </div>
+    </header>
+
+    <main>
+        <div class="achievement-header">
+            <div class="container">
+                <h1>Your Typing Achievements</h1>
+                <p>Track your progress, earn rewards, and showcase your typing mastery. Unlock badges as you improve your skills and complete challenges.</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <section class="section">
+                <h2 class="section-title">Your Achievement Progress</h2>
+                <div class="achievement-stats">
+                    <div class="stat-box">
+                        <div class="stat-number">12/30</div>
+                        <p>Achievements Unlocked</p>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">8</div>
+                        <p>Badges Earned</p>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">Silver</div>
+                        <p>Current Rank</p>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">6250</div>
+                        <p>Achievement Points</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Your Badges</h2>
+                <div class="badge-display">
+                    <div class="badge earned">
+                        🚀
+                        <div class="badge-tooltip">Speed Demon: Type 70+ WPM</div>
+                    </div>
+                    <div class="badge earned">
+                        🎯
+                        <div class="badge-tooltip">Precision Master: 99% Accuracy</div>
+                    </div>
+                    <div class="badge earned">
+                        🔥
+                        <div class="badge-tooltip">Streak Master: 7-Day Streak</div>
+                    </div>
+                    <div class="badge earned">
+                        🌟
+                        <div class="badge-tooltip">First Achievement</div>
+                    </div>
+                    <div class="badge earned">
+                        💯
+                        <div class="badge-tooltip">Perfect Score</div>
+                    </div>
+                    <div class="badge earned">
+                        🏆
+                        <div class="badge-tooltip">Top 10 Rank</div>
+                    </div>
+                    <div class="badge earned">
+                        ⚡
+                        <div class="badge-tooltip">Lightning Fast</div>
+                    </div>
+                    <div class="badge earned">
+                        📚
+                        <div class="badge-tooltip">Completed 10 Tests</div>
+                    </div>
+                    <div class="badge locked">
+                        🏅
+                        <div class="badge-tooltip">Gold Rank (Locked)</div>
+                    </div>
+                    <div class="badge locked">
+                        🌍
+                        <div class="badge-tooltip">Global Champion (Locked)</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Achievement Categories</h2>
+                <div class="achievement-categories">
+                    <button class="category-button active">All</button>
+                    <button class="category-button">Speed</button>
+                    <button class="category-button">Accuracy</button>
+                    <button class="category-button">Consistency</button>
+                    <button class="category-button">Challenges</button>
+                </div>
+
+                <div class="achievements-grid">
+                    <div class="achievement-card completed" data-category="speed">
+                        <div class="achievement-icon">🚀</div>
+                        <h3 class="achievement-title">Speed Demon</h3>
+                        <p class="achievement-description">Achieve a typing speed of 70 WPM or higher in a ranked test.</p>
+                        <div class="achievement-progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                        <div class="achievement-status">
+                            <span class="progress-text">Completed!</span>
+                            <span>500 points</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card completed" data-category="accuracy">
+                        <div class="achievement-icon">🎯</div>
+                        <h3 class="achievement-title">Precision Master</h3>
+                        <p class="achievement-description">Complete a test with 99% accuracy or higher.</p>
+                        <div class="achievement-progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                        <div class="achievement-status">
+                            <span class="progress-text">Completed!</span>
+                            <span>750 points</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card" data-category="speed">
+                        <div class="achievement-icon">⏱️</div>
+                        <h3 class="achievement-title">Speed Improvement</h3>
+                        <p class="achievement-description">Improve your average WPM by 20 from your initial tests.</p>
+                        <div class="achievement-progress">
+                            <div class="progress-bar" style="width: 85%"></div>
+                        </div>
+                        <div class="achievement-status">
+                            <span class="progress-text">17/20 WPM</span>
+                            <span>300 points</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card completed" data-category="challenges">
+                        <div class="achievement-icon">🔥</div>
+                        <h3 class="achievement-title">Weekly Streak</h3>
+                        <p class="achievement-description">Practice typing for 7 consecutive days.</p>
+                        <div class="achievement-progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                        <div class="achievement-status">
+                            <span class="progress-text">Completed!</span>
+                            <span>500 points</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card" data-category="consistency">
+                        <div class="achievement-icon">📈</div>
+                        <h3 class="achievement-title">Consistency King</h3>
+                        <p class="achievement-description">Maintain a typing speed within 5 WPM range for 10 consecutive tests.</p>
+                        <div class="achievement-progress">
+                            <div class="progress-bar" style="width: 40%"></div>
+                        </div>
+                        <div class="achievement-status">
+                            <span class="progress-text">4/10 tests</span>
+                            <span>800 points</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card completed" data-category="accuracy">
+                        <div class="achievement-icon">💯</div>
+                        <h3 class="achievement-title">Perfect Score</h3>
+                        <p class="achievement-description">Complete a test with 100% accuracy.</p>
+                        <div class="achievement-progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                        <div class="achievement-status">
+                            <span class="progress-text">Completed!</span>
+                            <span>1000 points</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card" data-category="challenges">
+                        <div class="achievement-icon">🌎</div>
+                        <h3 class="achievement-title">Language Explorer</h3>
+                        <p class="achievement-description">Complete typing tests in 5 different language categories.</p>
+                        <div class="achievement-progress">
+                            <div class="progress-bar" style="width: 60%"></div>
+                        </div>
+                        <div class="achievement-status">
+                            <span class="progress-text">3/5 languages</span>
+                            <span>750 points</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card completed" data-category="challenges">
+                        <div class="achievement-icon">📚</div>
+                        <h3 class="achievement-title">Dedicated Learner</h3>
+                        <p class="achievement-description">Complete 10 typing tests in practice mode.</p>
+                        <div class="achievement-progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                        <div class="achievement-status">
+                            <span class="progress-text">Completed!</span>
+                            <span>300 points</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card" data-category="challenges">
+                        <div class="achievement-icon">🏆</div>
+                        <h3 class="achievement-title">Champion</h3>
+                        <p class="achievement-description">Reach the top 10 on the global leaderboard.</p>
+                        <div class="achievement-progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                        <div class="achievement-status">
+                            <span class="progress-text">Completed!</span>
+                            <span>2000 points</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card" data-category="speed">
+                        <div class="achievement-icon">⚡</div>
+                        <h3 class="achievement-title">Lightning Fingers</h3>
+                        <p class="achievement-description">Type at a speed of 100+ WPM for an entire test.</p>
+                        <div class="achievement-progress">
+                            <div class="progress-bar" style="width: 75%"></div>
+                        </div>
+                        <div class="achievement-status">
+                            <span class="progress-text">75/100 WPM</span>
+                            <span>1500 points</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card" data-category="challenges">
+                        <div class="achievement-icon">🧠</div>
+                        <h3 class="achievement-title">Code Wizard</h3>
+                        <p class="achievement-description">Complete 5 programming language typing tests with 90%+ accuracy.</p>
+                        <div class="achievement-progress">
+                            <div class="progress-bar" style="width: 20%"></div>
+                        </div>
+                        <div class="achievement-status">
+                            <span class="progress-text">1/5 completed</span>
+                            <span>1000 points</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-card completed" data-category="challenges">
+                        <div class="achievement-icon">🌟</div>
+                        <h3 class="achievement-title">First Steps</h3>
+                        <p class="achievement-description">Complete your first typing test.</p>
+                        <div class="achievement-progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                        <div class="achievement-status">
+                            <span class="progress-text">Completed!</span>
+                            <span>100 points</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Achievement Milestones</h2>
+                <div class="cards">
+                    <div class="card">
+                        <h3 class="card-title">Bronze Milestone</h3>
+                        <p class="card-content">Unlock 5 achievements to receive the Bronze rank badge and gain access to exclusive practice modes.</p>
+                        <div class="achievement-progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                        <div class="achievement-status">
+                            <span class="progress-text">Completed!</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Silver Milestone</h3>
+                        <p class="card-content">Unlock 10 achievements to receive the Silver rank badge and unlock custom themes.</p>
+                        <div class="achievement-progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                        <div class="achievement-status">
+                            <span class="progress-text">Completed!</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Gold Milestone</h3>
+                        <p class="card-content">Unlock 20 achievements to receive the Gold rank badge and participate in monthly competitions.</p>
+                        <div class="achievement-progress">
+                            <div class="progress-bar" style="width: 60%"></div>
+                        </div>
+                        <div class="achievement-status">
+                            <span class="progress-text">12/20 achievements</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 KeyStorm - Master Your Typing Speed</p>
+        </div>
+    </footer>
+
+    <button class="fire-button" id="fire-button">🔥</button>
+    <div class="message" id="message-display"></div>
+
+    <script>
+        // DOM Elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const navToggle = document.getElementById('nav-toggle');
+        const navMenu = document.getElementById('nav-menu');
+        const categoryButtons = document.querySelectorAll('.category-button');
+        
+        // Functions
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+        
+        function toggleMenu() {
+            navMenu.classList.toggle('active');
+        }
+        
+        function loadThemePreference() {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            if (darkMode) {
+                document.body.classList.add('dark-mode');
+                themeToggle.checked = true;
+            }
+        }
+
+        // Event Listeners for category buttons
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const selectedCategory = button.textContent.toLowerCase();
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                // Filter achievements based on selected category
+                const achievementCards = document.querySelectorAll('.achievement-card');
+                achievementCards.forEach(card => {
+                    if (selectedCategory === 'all' || card.getAttribute('data-category') === selectedCategory) {
+                        card.style.display = 'flex'; // Show the card
+                    } else {
+                        card.style.display = 'none'; // Hide the card
+                    }
+                });
+            });
+        });
+
+        // Event Listeners
+        themeToggle.addEventListener('change', toggleTheme);
+        navToggle.addEventListener('click', toggleMenu);
+
+        // Load theme preference on page load
+        loadThemePreference();
+
+        // Fire button functionality
+        const fireButton = document.getElementById('fire-button');
+        const messageDisplay = document.getElementById('message-display');
+
+        fireButton.addEventListener('click', () => {
+            messageDisplay.textContent = "Achievement Unlocked!";
+            messageDisplay.style.display = "block";
+            setTimeout(() => {
+                messageDisplay.style.display = "none";
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

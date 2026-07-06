@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeyStorm - Your Stats</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #03a9f4;
+            --text-color: #333;
+            --error-color: #f44336;
+            --success-color: #4caf50;
+            --bg-color: #a8ded9;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+        }
+
+        .dark-mode {
+            --primary-color: #64b5f6;
+            --secondary-color: #0288d1;
+            --accent-color: #00b0ff;
+            --text-color: #e0e0e0;
+            --error-color: #ff7043;
+            --success-color: #66bb6a;
+            --bg-color: #0f3a42;
+            --card-bg: #1e1e1e;
+            --border-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo svg {
+            height: 100px;
+            width: 100px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            padding: 0.5rem;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        nav a.active {
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-label {
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+
+        .filter-select {
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .stat-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-icon {
+            width: 24px;
+            height: 24px;
+            color: var(--accent-color);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-description {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .comparison {
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+
+        .comparison.positive {
+            color: var(--success-color);
+        }
+
+        .comparison.negative {
+            color: var(--error-color);
+        }
+
+        .chart-container {
+            height: 250px;
+            width: 100%;
+            margin-bottom: 1rem;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .history-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        .leaderboard-section {
+            margin-top: 3rem;
+        }
+
+        .leaderboard-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .tab-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .leaderboard-card {
+            margin-bottom: 3rem;
+            overflow-x: auto;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--card-bg);
+        }
+
+        .leaderboard-table th, .leaderboard-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .leaderboard-table th {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .leaderboard-row.highlighted {
+            background-color: rgba(3, 169, 244, 0.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto;
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 30px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        .mode-icon {
+            margin-right: 8px;
+        }
+
+        .nav-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background-color: var(--primary-color);
+                z-index: 100;
+                transition: 0.5s;
+                padding: 2rem;
+            }
+            
+            nav.active {
+                right: 0;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .nav-toggle {
+                display: block;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .nav-toggle {
+                display: none;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100" height="100">
+                <!-- Keyboard base -->
+                <rect x="100" y="140" width="200" height="90" rx="10" ry="10" fill="#333333" />
+                <rect x="105" y="145" width="190" height="80" rx="8" ry="8" fill="#222222" />
+                
+                <!-- Keyboard keys -->
+                <!-- Row 1 -->
+                <rect x="115" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="145" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="175" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="205" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="235" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="265" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                
+                <!-- Row 2 (Removing coloring) -->
+                <rect x="125" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- W key -->
+                <rect x="155" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- A key -->
+                <rect x="185" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- S key -->
+                <rect x="215" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- D key -->
+                <rect x="245" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                
+                <!-- Space bar -->
+                <rect x="145" y="215" width="110" height="15" rx="5" ry="5" fill="#444444" stroke="#666666" stroke-width="1" />
+            </svg>
+            <div class="logo-text">KeyStorm</div>
+        </div>
+        
+        <nav id="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="practice.html">Practice</a></li>
+                <li><a href="ranked.html">Ranked</a></li>
+                <li><a href="stats.html" class="active">Stats</a></li>
+                <li><a href="achievements.html">Achievements</a></li>
+                <li><a href="signup.html">Sign Up</a></li>
+                <li><a href="signin.html">Sign In</a></li>
+            </ul>
+        </nav>
+        
+        <div class="controls">
+            <div class="mode-toggle">
+                <span class="mode-icon">☀️</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+                <span class="mode-icon">🌙</span>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">☰</div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="page-header">
+                <h1>Your Typing Statistics</h1>
+                <p>Track your progress and improvement over time</p>
+            </section>
+
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Average WPM</div>
+                        <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-value">80</div> <!-- Replace with actual average WPM -->
+                    <div class="stat-description">Your average typing speed in words per minute</div>
+                    <div class="comparison positive">
+                        <span>↑ 4.3% from last week</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Accuracy</div>
+                        <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <div class="stat-value">95.5%</div> <!-- Replace with actual accuracy -->
+                    <div class="stat-description">Your average typing accuracy percentage</div>
+                    <div class="comparison positive">
+                        <span>↑ 1.2% from last week</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Total Tests</div>
+                        <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-value">5</div> <!-- Total tests based on last 5 sessions -->
+                    <div class="stat-description">Number of typing tests completed in the last 5 sessions</div>
+                </div>
+            </section>
+
+            <section class="chart-section">
+                <h2>Performance Over Time</h2>
+                <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </section>
+
+            <section class="recent-history">
+                <h2>Recent Sessions</h2>
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Mode</th>
+                            <th>WPM</th>
+                            <th>Accuracy</th>
+                            <th>Duration</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>April 5, 2025</td>
+                            <td>Ranked</td>
+                            <td>83</td>
+                            <td>97.2%</td>
+                            <td>1:30</td>
+                            <td>153</td>
+                        </tr>
+                        <tr>
+                            <td>April 5, 2025</td>
+                            <td>Ranked</td>
+                            <td>79</td>
+                            <td>96.8%</td>
+                            <td>2:15</td>
+                            <td>142</td>
+                        </tr>
+                        <tr>
+                            <td>April 4, 2025</td>
+                            <td>Ranked</td>
+                            <td>76</td>
+                            <td>95.1%</td>
+                            <td>3:00</td>
+                            <td>138</td>
+                        </tr>
+                        <tr>
+                            <td>April 4, 2025</td>
+                            <td>Ranked</td>
+                            <td>81</td>
+                            <td>96.5%</td>
+                            <td>1:30</td>
+                            <td>149</td>
+                        </tr>
+                        <tr>
+                            <td>April 3, 2025</td>
+                            <td>Ranked</td>
+                            <td>75</td>
+                            <td>95.8%</td>
+                            <td>5:00</td>
+                            <td>135</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="leaderboard-section">
+                <h2 class="section-title">Leaderboard</h2>
+                <div class="leaderboard-tabs">
+                    <button class="tab-btn active" data-tab="global">Global</button>
+                    <button class="tab-btn" data-tab="friends">Friends</button>
+                    <button class="tab-btn" data-tab="daily">Daily Challenge</button>
+                </div>
+                
+                <div class="card leaderboard-card">
+                    <table class="leaderboard-table" id="leaderboardTable">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>User</th>
+                                <th>WPM</th>
+                                <th>Accuracy</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="leaderboard-row">
+                                <td class="rank-cell">1</td>
+                                <td class="user-cell">
+                                    <span class="user-avatar advanced">S</span>
+                                    <span class="username">SpeedyFingers</span>
+                                </td>
+                                <td>123</td>
+                                <td>98.7%</td>
+                                <td>Apr 2, 2025</td>
+                            </tr>
+                            <tr class="leaderboard-row">
+                                <td class="rank-cell">2</td>
+                                <td class="user-cell">
+                                    <span class="user-avatar advanced">T</span>
+                                    <span class="username">TypeMaster42</span>
+                                </td>
+                                <td>116</td>
+                                <td>97.2%</td>
+                                <td>Apr 3, 2025</td>
+                            </tr>
+                            <tr class="leaderboard-row">
+                                <td class="rank-cell">3</td>
+                                <td class="user-cell">
+                                    <span class="user-avatar advanced">K</span>
+                                    <span class="username">KeyboardWarrior</span>
+                                </td>
+                                <td>108</td>
+                                <td>99.1%</td>
+                                <td>Apr 1, 2025</td>
+                            </tr>
+                            <tr class="leaderboard-row highlighted">
+                                <td class="rank-cell">14</td>
+                                <td class="user-cell">
+                                    <span class="user-avatar intermediate">Y</span>
+                                    <span class="username">You</span>
+                                </td>
+                                <td>67</td>
+                                <td>94.5%</td>
+                                <td>Apr 4, 2025</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 KeyStorm - Master Your Typing Speed</p>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const navToggle = document.getElementById('nav-toggle');
+        const navMenu = document.getElementById('nav-menu');
+        const leaderboardTable = document.getElementById('leaderboardTable');
+        const leaderboardTabs = document.querySelectorAll('.tab-btn');
+
+        // Functions
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+        
+        function toggleMenu() {
+            navMenu.classList.toggle('active');
+        }
+        
+        function loadThemePreference() {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            if (darkMode) {
+                document.body.classList.add('dark-mode');
+                themeToggle.checked = true;
+            }
+        }
+
+        function updateLeaderboard(tabType) {
+            // Clear existing leaderboard rows
+            leaderboardTable.innerHTML = '';
+
+            // Generate different stats for each leaderboard type
+            let leaderboardData;
+            if (tabType === 'global') {
+                leaderboardData = [
+                    { rank: 1, user: 'SpeedyFingers', wpm: 123, accuracy: '98.7%', date: 'Apr 2, 2025' },
+                    { rank: 2, user: 'TypeMaster42', wpm: 116, accuracy: '97.2%', date: 'Apr 3, 2025' },
+                    { rank: 3, user: 'KeyboardWarrior', wpm: 108, accuracy: '99.1%', date: 'Apr 1, 2025' },
+                ];
+            } else if (tabType === 'friends') {
+                leaderboardData = [
+                    { rank: 1, user: 'Friend1', wpm: 90, accuracy: '95%', date: 'Apr 4, 2025' },
+                    { rank: 2, user: 'Friend2', wpm: 85, accuracy: '92%', date: 'Apr 4, 2025' },
+                    { rank: 3, user: 'Friend3', wpm: 80, accuracy: '90%', date: 'Apr 4, 2025' },
+                ];
+            } else if (tabType === 'daily') {
+                leaderboardData = [
+                    { rank: 1, user: 'DailyChallenger1', wpm: 100, accuracy: '97%', date: 'Apr 4, 2025' },
+                    { rank: 2, user: 'DailyChallenger2', wpm: 95, accuracy: '96%', date: 'Apr 4, 2025' },
+                    { rank: 3, user: 'DailyChallenger3', wpm: 90, accuracy: '95%', date: 'Apr 4, 2025' },
+                ];
+            }
+
+            // Populate leaderboard table
+            leaderboardData.forEach(data => {
+                const row = leaderboardTable.insertRow();
+                row.innerHTML = `
+                    <td>${data.rank}</td>
+                    <td class="user-cell">
+                        <span class="user-avatar advanced">${data.user.charAt(0)}</span>
+                        <span class="username">${data.user}</span>
+                    </td>
+                    <td>${data.wpm}</td>
+                    <td>${data.accuracy}</td>
+                    <td>${data.date}</td>
+                `;
+            });
+        }
+
+        // Event Listeners
+        themeToggle.addEventListener('change', toggleTheme);
+        navToggle.addEventListener('click', toggleMenu);
+        leaderboardTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                leaderboardTabs.forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Update leaderboard data based on the selected tab
+                const tabType = this.getAttribute('data-tab');
+                updateLeaderboard(tabType);
+            });
+        });
+
+        // Initialize
+        loadThemePreference();
+
+        // Sample data for the chart
+        const labels = ['April 1', 'April 2', 'April 3', 'April 4', 'April 5'];
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'WPM',
+                data: [75, 80, 78, 83, 79], // Replace with actual WPM data
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: true,
+            }]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Performance Over Time'
+                    }
+                }
+            },
+        };
+
+        const performanceChart = new Chart(
+            document.getElementById('performanceChart'),
+            config
+        );
+    </script>
+</body>
+</html>

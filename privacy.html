@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy & Policy</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <style>
+        body {
+            background-color: #e0f7fa; /* Light greenish-blue background */
+            color: #004d40; /* Darker greenish-blue text color */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #00796b; /* Medium greenish-blue for the header */
+        }
+        p {
+            margin-bottom: 15px;
+            line-height: 1.6; /* Improved readability */
+        }
+        label {
+            display: block;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #00796b; /* Button color */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #004d40; /* Darker shade on hover */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Privacy & Policy</h1>
+    </header>
+    <main>
+        <p>Your privacy is important to us. This privacy policy explains how we collect, use, and protect your information when you use KeyStorm.</p>
+        
+        <h2>Information We Collect</h2>
+        <p>We may collect personal information such as your name, email address, and usage data when you register for an account or use our services.</p>
+        
+        <h2>How We Use Your Information</h2>
+        <p>Your information helps us to provide and improve our services, communicate with you, and personalize your experience on KeyStorm.</p>
+        
+        <h2>Data Protection</h2>
+        <p>We implement various security measures to protect your personal information from unauthorized access, use, or disclosure.</p>
+        
+        <h2>Cookies</h2>
+        <p>We use cookies to enhance your experience. You can choose to accept or decline cookies through your browser settings.</p>
+        
+        <h2>Changes to This Policy</h2>
+        <p>We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page.</p>
+        
+        <h2>Contact Us</h2>
+        <p>If you have any questions about this privacy policy, please contact us at support@keystorm.com.</p>
+        
+        <label>
+            <input type="checkbox" id="agree-checkbox"> I agree to the terms and conditions
+        </label>
+        <button id="agree-button">Continue</button>
+    </main>
+    <script>
+        document.getElementById('agree-button').addEventListener('click', function() {
+            if (document.getElementById('agree-checkbox').checked) {
+                window.location.href = 'index.html'; // Redirect to home page
+            } else {
+                alert('You must agree to the terms and conditions.');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeyStorm - Practice Session</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #03a9f4;
+            --text-color: #333;
+            --error-color: #f44336;
+            --success-color: #4caf50;
+            --bg-color: #a8ded9;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+        }
+
+        .dark-mode {
+            --primary-color: #64b5f6;
+            --secondary-color: #0288d1;
+            --accent-color: #00b0ff;
+            --text-color: #e0e0e0;
+            --error-color: #ff7043;
+            --success-color: #66bb6a;
+            --bg-color: #0f3a42;
+            --card-bg: #1e1e1e;
+            --border-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo svg {
+            height: 100px;
+            width: 100px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            padding: 0.5rem;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        nav a.active {
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 30px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        .mode-icon {
+            margin-right: 8px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto;
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Practice page specific styles */
+        .page-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .practice-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .option-label {
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .option-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .option-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .option-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .timer-display {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .typing-area {
+            margin-bottom: 1.5rem;
+        }
+
+        .sample-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            padding: 1rem;
+            min-height: 150px;
+            background-color: var(--bg-color);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .char {
+            position: relative;
+            padding: 0 1px;
+        }
+
+        .char.current {
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 2px;
+        }
+
+        .char.correct {
+            color: var(--success-color); /* Green */
+        }
+
+        .char.incorrect {
+            color: var(--error-color); /* Red */
+            text-decoration: underline;
+        }
+
+        .metrics-display {
+            display: flex;
+            justify-content: space-around;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .metric {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .controls-area {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .primary-btn, .secondary-btn, .accent-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .primary-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .secondary-btn {
+            background-color: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .secondary-btn:hover {
+            background-color: #d0d0d0;
+        }
+
+        .secondary-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .accent-btn {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .accent-btn:hover {
+            background-color: #0288d1;
+        }
+
+        .result-card {
+            text-align: center;
+        }
+
+        .result-card h2 {
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .result-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .result-label {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .result-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .practice-options {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .results-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .result-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background-color: var(--primary-color);
+                z-index: 100;
+                transition: 0.5s;
+                padding: 2rem;
+            }
+            
+            nav.active {
+                right: 0;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .nav-toggle {
+                display: block;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+            
+            .controls-area {
+                flex-direction: column;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .nav-toggle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100" height="100">
+                <!-- Keyboard base -->
+                <rect x="100" y="140" width="200" height="90" rx="10" ry="10" fill="#333333" />
+                <rect x="105" y="145" width="190" height="80" rx="8" ry="8" fill="#222222" />
+                
+                <!-- Keyboard keys -->
+                <!-- Row 1 -->
+                <rect x="115" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="145" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="175" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="205" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="235" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                <rect x="265" y="155" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                
+                <!-- Row 2 (Removing coloring) -->
+                <rect x="125" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- W key -->
+                <rect x="155" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- A key -->
+                <rect x="185" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- S key -->
+                <rect x="215" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" /> <!-- D key -->
+                <rect x="245" y="185" width="20" height="20" rx="3" ry="3" fill="#444444" stroke="#666666" stroke-width="1" />
+                
+                <!-- Space bar -->
+                <rect x="145" y="215" width="110" height="15" rx="5" ry="5" fill="#444444" stroke="#666666" stroke-width="1" />
+            </svg>
+            <div class="logo-text">KeyStorm</div>
+        </div>
+        
+        <nav id="nav-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="practice.html" class="active">Practice</a></li>
+                <li><a href="ranked.html">Ranked</a></li>
+                <li><a href="stats.html">Stats</a></li>
+                <li><a href="achievements.html">Achievements</a></li>
+                <li><a href="signup.html">Sign Up</a></li>
+                <li><a href="signin.html">Sign In</a></li>
+            </ul>
+        </nav>
+        
+        <div class="controls">
+            <div class="mode-toggle">
+                <span class="mode-icon">☀️</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+                <span class="mode-icon">🌙</span>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">☰</div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1 class="page-title">Practice Session</h1>
+            
+            <div class="practice-options">
+                <div class="option-group">
+                    <span class="option-label">Time Limit</span>
+                    <div class="option-buttons">
+                        <button class="option-btn" data-time="1">1 min</button>
+                        <button class="option-btn active" data-time="2">2 min</button>
+                        <button class="option-btn" data-time="5">5 min</button>
+                        <button class="option-btn" data-time="0">No Limit</button>
+                    </div>
+                </div>
+                
+                <div class="option-group">
+                    <span class="option-label">Difficulty</span>
+                    <div class="option-buttons">
+                        <button class="option-btn" data-difficulty="easy">Easy</button>
+                        <button class="option-btn active" data-difficulty="medium">Medium</button>
+                        <button class="option-btn" data-difficulty="hard">Hard</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timer-display">2:00</div>
+            
+            <div class="card">
+                <div class="typing-area">
+                    <div class="sample-text" id="sampleText">
+                        <!-- This will be populated with text via JavaScript -->
+                    </div>
+                    <div class="metrics-display">
+                        <div class="metric">
+                            <span class="metric-label">WPM</span>
+                            <span class="metric-value" id="wpmValue">0</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Accuracy</span>
+                            <span class="metric-value" id="accuracyValue">100%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Characters</span>
+                            <span class="metric-value" id="charCount">0/0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="controls-area">
+                    <button id="startBtn" class="primary-btn">Start Typing</button>
+                    <button id="newTextBtn" class="secondary-btn">New Text</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 KeyStorm - Master Your Typing Speed</p>
+        </div>
+    </footer>
+
+    <button class="fire-button" id="fire-button" style="position: fixed; bottom: 20px; right: 20px; font-size: 2rem; background: transparent; border: none; cursor: pointer; transition: transform 0.3s;">🔥</button>
+    <div class="message" id="message-display" style="position: fixed; bottom: 90px; right: 20px; font-size: 1.2rem; color: #ff0000; background-color: rgb(255, 255, 255); border: 1px solid #4a6fa5; border-radius: 5px; padding: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); display: none; z-index: 1000;"></div>
+
+    <script>
+        // DOM Elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const navToggle = document.getElementById('nav-toggle');
+        const navMenu = document.getElementById('nav-menu');
+        const sampleText = document.getElementById('sampleText');
+        const inputField = document.createElement('input'); // Create an input field for typing
+        inputField.setAttribute('type', 'text');
+        inputField.setAttribute('placeholder', 'Start typing here...');
+        inputField.style.width = '100%';
+        inputField.style.fontSize = '1.2rem';
+        inputField.style.padding = '0.5rem';
+        document.querySelector('.typing-area').appendChild(inputField); // Append it to the typing area
+
+        let timeLimit = 2; // Default time limit
+        let timer; // Timer variable
+        let timeRemaining; // Time remaining
+        let isTyping = false; // Typing state
+        let currentCharIndex = 0; // Current character index
+        let totalChars = 0; // Total characters in the sample text
+
+        // Functions
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+        
+        function toggleMenu() {
+            navMenu.classList.toggle('active');
+        }
+        
+        function loadThemePreference() {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            if (darkMode) {
+                document.body.classList.add('dark-mode');
+                themeToggle.checked = true;
+            }
+        }
+
+        function loadSampleText() {
+            const easyParagraphs = [
+                "The cat sat on the mat",
+                "Dogs are great companions",
+                "Birds can fly high in the sky"
+            ];
+
+            const mediumParagraphs = [
+                "The quick brown fox jumps over the lazy dog. This pangram contains every letter of the English alphabet at least once",
+                "Programming is the process of creating a set of instructions that tell a computer how to perform a task",
+                "Effective communication requires clarity of thought and precision of language"
+            ];
+
+            const hardParagraphs = [
+                "The art of typing quickly and accurately is a valuable skill in today's digital world. Regular practice with proper technique will help you develop muscle memory and increase your typing speed",
+                "Artificial Intelligence is transforming industries by automating tasks and providing insights that were previously unattainable",
+                "Quantum computing represents a new frontier in technology, promising to solve complex problems at unprecedented speeds"
+            ];
+
+            let paragraphs;
+            if (document.querySelector('.option-btn.active[data-difficulty="easy"]')) {
+                paragraphs = easyParagraphs;
+            } else if (document.querySelector('.option-btn.active[data-difficulty="medium"]')) {
+                paragraphs = mediumParagraphs;
+            } else {
+                paragraphs = hardParagraphs;
+            }    
+
+            const randomIndex = Math.floor(Math.random() * paragraphs.length);
+            const text = paragraphs[randomIndex];
+            sampleText.innerHTML = ''; // Clear previous text
+            text.split('').forEach((char, index) => {
+                const charSpan = document.createElement('span');
+                charSpan.className = 'char';
+                charSpan.textContent = char;
+                if (index === 0) charSpan.classList.add('current');
+                sampleText.appendChild(charSpan);
+            });
+            totalChars = text.length-1; // Set total characters
+            currentCharIndex = 0; // Reset current character index
+        }
+
+        function startTimer() {
+            timeRemaining = timeLimit * 60; // Convert minutes to seconds
+            const timerDisplay = document.querySelector('.timer-display');
+            timerDisplay.textContent = `${Math.floor(timeRemaining / 60)}:${(timeRemaining % 60).toString().padStart(2, '0')}`;
+
+            timer = setInterval(() => {
+                timeRemaining--;
+                timerDisplay.textContent = `${Math.floor(timeRemaining / 60)}:${(timeRemaining % 60).toString().padStart(2, '0')}`;
+                if (timeRemaining <= 0) {
+                    clearInterval(timer);
+                    endTypingSession();
+                }
+            }, 1000);
+        }
+
+        function endTypingSession() {
+            isTyping = false;
+            clearInterval(timer);
+            document.getElementById('resultCard').style.display = 'block'; // Show the result card
+            document.getElementById('resultWpm').textContent = calculateWPM(); // Display WPM
+            document.getElementById('resultAccuracy').textContent = calculateAccuracy() + '%'; // Display Accuracy
+            document.getElementById('resultChars').textContent = totalChars; // Display total characters typed   
+        }
+
+        function calculateWPM() {
+            const correctCount = document.querySelectorAll('.char.correct').length;
+            return Math.round((correctCount / 5) / (timeLimit)); // Example calculation
+        }
+
+        function calculateAccuracy() {
+            const correctCount = document.querySelectorAll('.char.correct').length;
+            return Math.round((correctCount / totalChars) * 100) || 0;
+        }
+
+        // Event Listeners
+        themeToggle.addEventListener('change', toggleTheme);
+        navToggle.addEventListener('click', toggleMenu);
+
+        // Capture Selected Options
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const type = this.dataset.time ? 'time' : 'difficulty';
+                if (type === 'time') {
+                    timeLimit = this.dataset.time;
+                } else if (type === 'difficulty') {
+                    // Handle difficulty selection if needed
+                }
+                
+                // Remove active class from siblings
+                const siblings = Array.from(this.parentElement.children);
+                siblings.forEach(sibling => sibling.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+            });
+        });
+
+        // Event listener for the "New Text" button
+        document.getElementById('newTextBtn').addEventListener('click', function() {
+            // Reset the typing session
+            inputField.value = ''; // Clear the input field
+            currentCharIndex = 0; // Reset current character index
+            isTyping = false; // Reset typing state
+            clearInterval(timer); // Clear the timer
+            timeRemaining = timeLimit * 60; // Reset time remaining based on the selected time limit
+            document.querySelector('.timer-display').textContent = `${Math.floor(timeRemaining / 60)}:${(timeRemaining % 60).toString().padStart(2, '0')}`; // Reset timer display
+            loadSampleText(); // Load new sample text
+            document.getElementById('resultCard').style.display = 'none'; // Hide result card
+        });
+
+        // Event listener for the "Start Typing" button
+        document.getElementById('startBtn').addEventListener('click', function() {
+            // Reset the timer
+            clearInterval(timer); // Clear any existing timer
+            timeRemaining = timeLimit * 60; // Reset time remaining based on the selected time limit
+            document.querySelector('.timer-display').textContent = `${Math.floor(timeRemaining / 60)}:${(timeRemaining % 60).toString().padStart(2, '0')}`; // Reset timer display
+
+            // Start the typing session without resetting the paragraph
+            if (!isTyping) {
+                isTyping = true; // Set typing state to true
+                startTimer(); // Start the timer
+            }
+        });
+
+        // Typing Logic
+        inputField.addEventListener('input', function() {
+            if (!isTyping) {
+                isTyping = true;
+                startTimer();
+            }
+
+            const typedText = inputField.value;
+            const chars = sampleText.children;
+
+            if (typedText.length > currentCharIndex) {
+                if (typedText[currentCharIndex] === chars[currentCharIndex].textContent) {
+                    chars[currentCharIndex].classList.add('correct');
+                } else {
+                    chars[currentCharIndex].classList.add('incorrect');
+                }
+                currentCharIndex++;
+                if (currentCharIndex < chars.length) {
+                    chars[currentCharIndex].classList.add('current');
+                }else {
+                    // End the typing session if all characters are typed
+                    endTypingSession();
+                }
+            }
+
+            // Update stats
+            const correctCount = document.querySelectorAll('.char.correct').length;
+            const incorrectCount = document.querySelectorAll('.char.incorrect').length;
+            const totalCount = typedText.length;
+
+            // Update WPM, Accuracy, and Character Count
+            document.getElementById('wpmValue').textContent = calculateWPM();
+            document.getElementById('accuracyValue').textContent = `${calculateAccuracy()}%`;
+            document.getElementById('charCount').textContent = `${totalCount}/${totalChars}`;
+        });
+
+        // Initialize
+        loadThemePreference();
+        loadSampleText();
+
+        // Array of motivational messages
+        const messages = [
+            "Keep typing! Every keystroke brings you closer to mastery.",
+            "Practice makes perfect! You're doing great!",
+            "Believe in yourself! Every word typed is a step forward.",
+            "Stay focused! Your typing skills are improving every day.",
+            "Consistency is key! Keep up the great work!",
+            "You're on a roll! Every day is a new opportunity to improve.",
+            "Typing is a skill that opens doors. Keep practicing!",
+            "Great job! Your fingers are becoming faster and more accurate.",
+            "Every keystroke counts! You're building a valuable skill.",
+            "Keep pushing! You're capable of amazing things!"
+        ];
+
+        // Function to show motivation message
+        document.getElementById('fire-button').addEventListener('click', function() {
+            const message = messages[Math.floor(Math.random() * messages.length)];
+            const messageDisplay = document.getElementById('message-display');
+            messageDisplay.textContent = message;
+            messageDisplay.style.display = 'block';
+
+            // Hide the message after 3 seconds
+            setTimeout(() => {
+                messageDisplay.style.display = 'none';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

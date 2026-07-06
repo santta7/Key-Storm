@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credits</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <style>
+        body {
+            background-color: #e0f7fa; /* Light greenish-blue background */
+            color: #004d40; /* Darker greenish-blue text color */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #00796b; /* Medium greenish-blue for the header */
+        }
+        .person {
+            margin-bottom: 20px; /* Space between person details */
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px; /* Space above buttons */
+        }
+        button {
+            background-color: #00796b; /* Button color */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #004d40; /* Darker shade on hover */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Credits</h1>
+    </header>
+    <main>
+        <div class="person">
+            <h2>Person 1</h2>
+            <p>Name: Rishikeshwar V T</p>
+            <p>Roll No: CB.SC.U4CSE24041</p>
+            <p>Role: Frontend Developer</p>
+            <p>Background: CSE aspirant from Amrita Vishwa Vidyapeetham-Coimbatore.</p>
+        </div>
+        <div class="person">
+            <h2>Person 2</h2>
+            <p>Name: Dhiraj Krishna V</p>
+            <p>Roll No: CB.SC.U4CSE24012</p>
+            <p>Role: Frontend Developer</p>
+            <p>Background: CSE aspirant from Amrita Vishwa Vidyapeetham-Coimbatore.</p>
+        </div>
+        <div class="person">
+            <h2>Person 3</h2>
+            <p>Name: Santhosh V</p>
+            <p>Roll No: CB.SC.U4CSE24047</p>
+            <p>Role: Frontend Developer</p>
+            <p>Background: CSE aspirant from Amrita Vishwa Vidyapeetham-Coimbatore.</p>
+        </div>
+
+        <div class="button-container">
+            <button id="back-button">Back to Home</button>
+        </div>
+    </main>
+    <script>
+        document.getElementById('back-button').addEventListener('click', function() {
+            window.location.href = 'index.html'; // Redirect to home page
+        });
+    </script>
+</body>
+</html>

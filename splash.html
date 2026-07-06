@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>KeyStorm Loading...</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #00f2fe, #4facfe); /* Bright Gradient */
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 1px 1px 5px #00000060;
+    }
+
+    .emoji {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+
+    .loader {
+      width: 120px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .loader::before {
+      content: '';
+      display: block;
+      height: 100%;
+      width: 0;
+      background: #fff;
+      animation: load 1s forwards;
+    }
+
+    @keyframes load {
+      to { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <h1>🔐 KeyStorm</h1>
+  <div class="emoji">⚡ Starting up...</div>
+  <div class="loader"></div>
+</body>
+</html>
